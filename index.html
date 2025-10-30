@@ -1,124 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Interactive Test Generator</title>
-    <style>
-      body {
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
-          Arial;
-        line-height: 1.4;
-        margin: 18px;
-        background: #f7f8fb;
-      }
-      .container {
-        max-width: 900px;
-        margin: 0 auto;
-        background: white;
-        padding: 18px;
-        border-radius: 10px;
-        box-shadow: 0 6px 20px rgba(20, 30, 60, 0.08);
-      }
-      textarea {
-        width: 100%;
-        height: 240px;
-        padding: 12px;
-        font-family: monospace;
-        font-size: 13px;
-        border-radius: 8px;
-        border: 1px solid #d8dbe2;
-      }
-      input[type="text"],
-      textarea.answerKey {
-        width: 100%;
-        padding: 10px;
-        font-family: monospace;
-        font-size: 13px;
-        border-radius: 8px;
-        border: 1px solid #d8dbe2;
-      }
-      .row {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-      }
-      button {
-        padding: 8px 12px;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
-      }
-      button.primary {
-        background: #2b6df6;
-        color: white;
-      }
-      button.ghost {
-        background: transparent;
-        border: 1px solid #cbd5e1;
-      }
-      .question {
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #eef2ff;
-        margin-bottom: 10px;
-      }
-      .qtext {
-        font-weight: 600;
-      }
-      .feedback {
-        margin-top: 8px;
-      }
-      .correct {
-        color: green;
-        font-weight: 700;
-      }
-      .wrong {
-        color: #d9534f;
-        font-weight: 700;
-      }
-      .small {
-        font-size: 13px;
-        color: #475569;
-      }
-      .notice {
-        background: #fff7ed;
-        border: 1px solid #ffedd5;
-        padding: 8px;
-        border-radius: 6px;
-      }
-      .controls {
-        display: flex;
-        gap: 8px;
-        margin-top: 8px;
-      }
-      .meta {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        margin-top: 8px;
-        color: #475569;
-      }
-      label.k {
-        display: block;
-        margin-bottom: 6px;
-        font-weight: 600;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h2>Interactive Test Generator</h2>
-      <p class="small">
-        Paste questions in the box in this exact format (a sample is already
-        provided). <strong>Do not include inline answers</strong> — instead
-        enter the global answer key in the separate box below labeled
-        <em>Answer key</em>. Example answer key format:
-        <code>1:B, 2:A, 3:C</code> or <code>Answers: 1:B; 2:A; 3:C</code>.
-      </p>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Interactive Test Generator</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    line-height: 1.4;
+    margin: 18px;
+    background: #f7f8fb;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(20, 30, 60, 0.08);
+  }
+  textarea, input[type="text"], textarea.answerKey {
+    width: 100%;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 13px;
+    border-radius: 8px;
+    border: 1px solid #d8dbe2;
+  }
+  .row { display: flex; gap: 10px; align-items: center; }
+  button { padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; }
+  button.primary { background: #2b6df6; color: white; }
+  button.ghost { background: transparent; border: 1px solid #cbd5e1; }
+  .question { padding: 10px; border-radius: 8px; border: 1px solid #eef2ff; margin-bottom: 10px; }
+  .qtext { font-weight: 600; }
+  .feedback { margin-top: 8px; }
+  .correct { color: green; font-weight: 700; }
+  .wrong { color: #d9534f; font-weight: 700; }
+  .small { font-size: 13px; color: #475569; }
+  .notice { background: #fff7ed; border: 1px solid #ffedd5; padding: 8px; border-radius: 6px; }
+  .controls { display: flex; gap: 8px; margin-top: 8px; }
+  .meta { display: flex; gap: 12px; align-items: center; margin-top: 8px; color: #475569; }
+  label.k { display: block; margin-bottom: 6px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Interactive Test Generator</h2>
+  <p class="small">
+    Paste questions in the box in this exact format. <strong>Do not include inline answers</strong> — enter the global answer key below. Example: <code>1:B, 2:A, 3:C</code>
+  </p>
 
-      <label class="k">Questions (no inline answers)</label>
-      <textarea id="input" aria-label="paste questions here">
+  <label class="k">Questions (no inline answers)</label>
+  <textarea id="input" rows="10">
 1. What became the global currency of the Early Modern era?
 A. Gold
 B. Silver
@@ -136,319 +69,229 @@ A. Encomienda
 B. Serfdom
 C. Mita system
 D. Chattel slavery
+  </textarea>
 
-# You can include comments with a leading #. Do NOT include per-question "Answer: ..." lines — they will be ignored.</textarea
-      >
+  <label class="k" style="margin-top:8px">Answer key (global)</label>
+  <textarea id="answerKey" class="answerKey" rows="2">1:B, 2:B, 3:C</textarea>
 
-      <label class="k" style="margin-top: 8px"
-        >Answer key (global) — enter here</label
-      >
-      <textarea
-        id="answerKey"
-        class="answerKey"
-        rows="2"
-        placeholder="Answers: 1:B, 2:B, 3:C"
-      >
-Answers: 1:B, 2:B, 3:C</textarea
-      >
+  <div class="controls" style="margin-top:8px">
+    <button class="primary" id="generate">Generate Test</button>
+    <button class="ghost" id="clear">Clear</button>
+    <button id="download">Download HTML</button>
+  </div>
 
-      <div class="controls" style="margin-top: 8px">
-        <button class="primary" id="generate">Generate Test</button>
-        <button class="ghost" id="clear">Clear</button>
-        <button id="download">Download HTML</button>
-      </div>
+  <div id="noticeArea"></div>
+  <div id="testArea" style="margin-top:18px"></div>
+  <div class="meta">
+    <div id="score"></div>
+    <div id="timing" class="small"></div>
+  </div>
+</div>
 
-      <div id="noticeArea"></div>
+<script>
+(function() {
+  const input = document.getElementById("input");
+  const answerKeyEl = document.getElementById("answerKey");
+  const generate = document.getElementById("generate");
+  const clear = document.getElementById("clear");
+  const testArea = document.getElementById("testArea");
+  const noticeArea = document.getElementById("noticeArea");
+  const scoreEl = document.getElementById("score");
+  const download = document.getElementById("download");
 
-      <div id="testArea" style="margin-top: 18px"></div>
+  function parseText(text) {
+    const lines = text.replace(/\r/g,"").split("\n");
+    const questions = [];
+    let current = null;
 
-      <div class="meta">
-        <div id="score"></div>
-        <div id="timing" class="small"></div>
-      </div>
-    </div>
+    for (let line of lines) {
+      line = line.trim();
+      if (!line || line.startsWith("#")) continue;
 
-    <!-- Test Scrambler link -->
-    <a
-      href="https://ylgx93.csb.app/"
-      target="_blank"
-      style="
-        position: fixed;
-        bottom: 12px;
-        right: 12px;
-        background: #2b6df6;
-        color: white;
-        padding: 8px 12px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: 600;
-        font-family: system-ui, Segoe UI, Roboto;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        z-index: 9999;
-      "
-    >
-      Test Scrambler
-    </a>
+      const qmatch = line.match(/^(\d+)[\.\)]\s*(.+)/);
+      if (qmatch) {
+        if (current) questions.push(current);
+        current = { num: parseInt(qmatch[1],10), text: qmatch[2].trim(), options:{} };
+        continue;
+      }
 
-    <script>
-      (function () {
-        const input = document.getElementById("input");
-        const answerKeyEl = document.getElementById("answerKey");
-        const generate = document.getElementById("generate");
-        const clear = document.getElementById("clear");
-        const testArea = document.getElementById("testArea");
-        const noticeArea = document.getElementById("noticeArea");
-        const scoreEl = document.getElementById("score");
-        const download = document.getElementById("download");
+      const omatch = line.match(/^([A-D])\.\s*(.+)/i);
+      if (omatch && current) {
+        current.options[omatch[1].toUpperCase()] = omatch[2].trim();
+        continue;
+      }
 
-        function parseText(text) {
-          const lines = text.replace(/\r/g, "").split("\n");
-          const questions = [];
-          let current = null;
+      if (current) current.text += " " + line;
+    }
 
-          for (let i = 0; i < lines.length; i++) {
-            let line = lines[i].trim();
-            if (!line) continue;
-            if (line.startsWith("#")) continue;
-            if (/^answer\s*:/i.test(line)) continue;
-            if (/^answers?\s*:/i.test(line)) continue;
+    if (current) questions.push(current);
+    return questions;
+  }
 
-            const qmatch = line.match(/^(\d+)\.\s*(.+)/);
-            if (qmatch) {
-              if (current) questions.push(current);
-              current = {
-                num: parseInt(qmatch[1], 10),
-                text: qmatch[2].trim(),
-                options: {},
-              };
-              continue;
-            }
+  function applyGlobalAnswers(questions, keyText) {
+    if (!keyText) return;
+    let s = keyText.trim().replace(/^answers?\s*:\s*/i,"");
+    const parts = s.split(/[;, \n]+/);
+    parts.forEach(p=>{
+      const m = p.match(/(\d+)\s*[:\)]?\s*([A-D])/i);
+      if (m) {
+        const n = parseInt(m[1],10);
+        const a = m[2].toUpperCase().trim();
+        const q = questions.find(q=>q.num===n);
+        if (q) q.answer = a;
+      }
+    });
+  }
 
-            const omatch = line.match(/^([A-D])\.\s*(.+)/i);
-            if (omatch && current) {
-              current.options[omatch[1].toUpperCase()] = omatch[2].trim();
-              continue;
-            }
+  function renderTest(questions) {
+    testArea.innerHTML = "";
+    if (!questions.length) {
+      noticeArea.innerHTML = '<div class="notice">No questions found. Make sure each question starts with "1." and options with "A." etc. Do not include inline answers.</div>';
+      return;
+    }
+    noticeArea.innerHTML = "";
 
-            const qmatch2 = line.match(/^(\d+)\)\s*(.+)/);
-            if (qmatch2) {
-              if (current) questions.push(current);
-              current = {
-                num: parseInt(qmatch2[1], 10),
-                text: qmatch2[2].trim(),
-                options: {},
-              };
-              continue;
-            }
+    const form = document.createElement("form");
+    form.id = "testForm";
 
-            if (current && !Object.keys(current.options).length) {
-              current.text += " " + line;
-            }
+    questions.forEach(q=>{
+      const qdiv = document.createElement("div");
+      qdiv.className = "question";
+      qdiv.dataset.qnum = q.num;
+
+      const qtxt = document.createElement("div");
+      qtxt.className = "qtext";
+      qtxt.textContent = q.num + ". " + q.text;
+      qdiv.appendChild(qtxt);
+
+      const optWrap = document.createElement("div");
+      optWrap.style.marginTop="8px";
+
+      ["A","B","C","D"].forEach(letter=>{
+        const label = document.createElement("label");
+        label.style.display="block";
+        label.style.cursor="pointer";
+
+        const input = document.createElement("input");
+        input.type="radio";
+        input.name = "q"+q.num;
+        input.value = letter;
+        label.appendChild(input);
+
+        const span = document.createElement("span");
+        span.style.marginLeft="8px";
+        span.textContent = letter + ". " + (q.options[letter] || "");
+        label.appendChild(span);
+
+        optWrap.appendChild(label);
+      });
+
+      qdiv.appendChild(optWrap);
+
+      const fb = document.createElement("div");
+      fb.className="feedback small";
+      qdiv.appendChild(fb);
+
+      form.appendChild(qdiv);
+    });
+
+    // buttons
+    const checkBtn = document.createElement("button");
+    checkBtn.type="button";
+    checkBtn.className="primary";
+    checkBtn.textContent="Check Answers";
+
+    const revealBtn = document.createElement("button");
+    revealBtn.type="button";
+    revealBtn.className="ghost";
+    revealBtn.textContent="Reveal Correct Answers";
+
+    const resetBtn = document.createElement("button");
+    resetBtn.type="button";
+    resetBtn.textContent="Reset";
+
+    const controls = document.createElement("div");
+    controls.className="controls";
+    controls.appendChild(checkBtn);
+    controls.appendChild(revealBtn);
+    controls.appendChild(resetBtn);
+    form.appendChild(controls);
+
+    testArea.appendChild(form);
+
+    checkBtn.addEventListener("click", ()=>{
+      let total = questions.length;
+      let correctCount = 0;
+      let graded = 0;
+
+      questions.forEach(q=>{
+        const radios = form.querySelectorAll('[name="q'+q.num+'"]');
+        let selected=null;
+        radios.forEach(r=>{ if(r.checked) selected=r.value; });
+
+        const fb = form.querySelector('.question[data-qnum="'+q.num+'"] .feedback');
+        fb.innerHTML="";
+
+        if (!q.answer) {
+          fb.innerHTML='<span class="small">No answer key provided for this question — cannot grade automatically.</span>';
+          if (selected) fb.innerHTML += " Your answer: <strong>"+selected+"</strong>";
+        } else {
+          graded++;
+          if (selected && selected.trim() === q.answer.trim()) {
+            correctCount++;
+            fb.innerHTML='<span class="correct">Correct ✓</span> — Your answer: '+selected;
+          } else {
+            fb.innerHTML='<span class="wrong">Incorrect ✗</span> — Your answer: '+(selected||"—")+' — Correct: <strong>'+q.answer+'</strong>';
           }
-          if (current) questions.push(current);
-
-          return questions;
         }
+      });
 
-        function applyGlobalAnswers(questions, keyText) {
-          if (!keyText) return;
-          let s = keyText.trim();
-          s = s.replace(/^answers?\s*:\s*/i, "");
-          const parts = s.split(/[;,\n]+/);
-          parts.forEach((p) => {
-            const m = p.match(/(\d+)\s*[:\)]?\s*([A-D])/i);
-            if (m) {
-              const n = parseInt(m[1], 10);
-              const a = m[2].toUpperCase();
-              const q = questions.find((q) => q.num === n);
-              if (q) q.answer = a;
-            }
-          });
-        }
+      if (graded>0) scoreEl.textContent = "Score: "+correctCount+" / "+graded+" (graded questions)";
+      else scoreEl.textContent = "No graded questions (no answer key provided).";
+    });
 
-        function renderTest(questions) {
-          testArea.innerHTML = "";
-          if (!questions.length) {
-            noticeArea.innerHTML =
-              '<div class="notice">No questions found. Make sure each question starts with "1." and options with "A." "B." etc. Do not include inline answers in the questions box.</div>';
-            return;
-          }
-          noticeArea.innerHTML = "";
+    revealBtn.addEventListener("click", ()=>{
+      questions.forEach(q=>{
+        const fb = form.querySelector('.question[data-qnum="'+q.num+'"] .feedback');
+        fb.innerHTML = q.answer ? '<span class="small">Correct answer: <strong>'+q.answer+'</strong></span>' : '<span class="small">No answer key for this question.</span>';
+      });
+    });
 
-          const form = document.createElement("form");
-          form.id = "testForm";
+    resetBtn.addEventListener("click", ()=>{
+      form.reset();
+      scoreEl.textContent="";
+      form.querySelectorAll(".feedback").forEach(f=>f.innerHTML="");
+    });
+  }
 
-          questions.forEach((q, idx) => {
-            const qdiv = document.createElement("div");
-            qdiv.className = "question";
-            qdiv.dataset.qnum = q.num;
+  generate.addEventListener("click", ()=>{
+    const text = input.value;
+    const keyText = answerKeyEl.value;
+    const questions = parseText(text);
+    applyGlobalAnswers(questions,keyText);
+    renderTest(questions);
+  });
 
-            const qtxt = document.createElement("div");
-            qtxt.className = "qtext";
-            qtxt.textContent = (q.num || idx + 1) + ". " + q.text;
-            qdiv.appendChild(qtxt);
+  clear.addEventListener("click", ()=>{
+    input.value="";
+    answerKeyEl.value="";
+    testArea.innerHTML="";
+    noticeArea.innerHTML="";
+    scoreEl.textContent="";
+  });
 
-            const optWrap = document.createElement("div");
-            optWrap.style.marginTop = "8px";
-
-            ["A", "B", "C", "D"].forEach((letter) => {
-              const label = document.createElement("label");
-              label.style.display = "block";
-              label.style.cursor = "pointer";
-              const input = document.createElement("input");
-              input.type = "radio";
-              input.name = "q" + (q.num || idx + 1);
-              input.value = letter;
-              input.id = "q" + (q.num || idx + 1) + letter;
-              label.appendChild(input);
-              const span = document.createElement("span");
-              span.style.marginLeft = "8px";
-              span.textContent = letter + ". " + (q.options[letter] || "");
-              label.appendChild(span);
-              optWrap.appendChild(label);
-            });
-
-            qdiv.appendChild(optWrap);
-
-            const fb = document.createElement("div");
-            fb.className = "feedback small";
-            qdiv.appendChild(fb);
-
-            form.appendChild(qdiv);
-          });
-
-          const checkBtn = document.createElement("button");
-          checkBtn.type = "button";
-          checkBtn.className = "primary";
-          checkBtn.textContent = "Check Answers";
-
-          const revealBtn = document.createElement("button");
-          revealBtn.type = "button";
-          revealBtn.className = "ghost";
-          revealBtn.textContent = "Reveal Correct Answers";
-
-          const resetBtn = document.createElement("button");
-          resetBtn.type = "button";
-          resetBtn.className = "";
-          resetBtn.textContent = "Reset";
-
-          const controls = document.createElement("div");
-          controls.className = "controls";
-          controls.appendChild(checkBtn);
-          controls.appendChild(revealBtn);
-          controls.appendChild(resetBtn);
-
-          form.appendChild(controls);
-          testArea.appendChild(form);
-
-          checkBtn.addEventListener("click", () => {
-            let total = questions.length;
-            let correctCount = 0;
-            let graded = 0;
-            questions.forEach((q, idx) => {
-              const radios = form.querySelectorAll(
-                '[name="q' + (q.num || idx + 1) + '"]'
-              );
-              let selected = null;
-              radios.forEach((r) => {
-                if (r.checked) selected = r.value;
-              });
-              const fb = form
-                .querySelectorAll(".question")
-                [idx].querySelector(".feedback");
-              fb.innerHTML = "";
-              if (!q.answer) {
-                fb.innerHTML =
-                  '<span class="small">No answer key provided for this question — cannot grade automatically.</span>';
-                if (selected)
-                  fb.innerHTML +=
-                    " Your answer: <strong>" + selected + "</strong>";
-              } else {
-                graded++;
-                if (selected === q.answer) {
-                  correctCount++;
-                  fb.innerHTML =
-                    '<span class="correct">Correct ✓</span> — Your answer: ' +
-                    (selected || "—");
-                } else {
-                  fb.innerHTML =
-                    '<span class="wrong">Incorrect ✗</span> — Your answer: ' +
-                    (selected || "—") +
-                    " — Correct: <strong>" +
-                    q.answer +
-                    "</strong>";
-                }
-              }
-            });
-
-            if (graded > 0) {
-              scoreEl.textContent =
-                "Score: " +
-                correctCount +
-                " / " +
-                graded +
-                " (graded questions)";
-            } else {
-              scoreEl.textContent =
-                "No graded questions (no answer key provided).";
-            }
-          });
-
-          revealBtn.addEventListener("click", () => {
-            questions.forEach((q, idx) => {
-              const fb = form
-                .querySelectorAll(".question")
-                [idx].querySelector(".feedback");
-              if (q.answer) {
-                fb.innerHTML =
-                  '<span class="small">Correct answer: <strong>' +
-                  q.answer +
-                  "</strong></span>";
-              } else {
-                fb.innerHTML =
-                  '<span class="small">No answer key for this question.</span>';
-              }
-            });
-          });
-
-          resetBtn.addEventListener("click", () => {
-            form.reset();
-            scoreEl.textContent = "";
-            const fbs = form.querySelectorAll(".feedback");
-            fbs.forEach((f) => (f.innerHTML = ""));
-          });
-        }
-
-        generate.addEventListener("click", () => {
-          const text = input.value;
-          const keyText = answerKeyEl.value;
-          const questions = parseText(text);
-          applyGlobalAnswers(questions, keyText);
-          renderTest(questions);
-        });
-
-        clear.addEventListener("click", () => {
-          input.value = "";
-          answerKeyEl.value = "";
-          testArea.innerHTML = "";
-          noticeArea.innerHTML = "";
-          scoreEl.textContent = "";
-        });
-
-        download.addEventListener("click", () => {
-          const blob = new Blob([document.documentElement.outerHTML], {
-            type: "text/html",
-          });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = "interactive_test.html";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          URL.revokeObjectURL(url);
-        });
-      })();
-    </script>
-  </body>
+  download.addEventListener("click", ()=>{
+    const blob = new Blob([document.documentElement.outerHTML],{type:"text/html"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download="interactive_test.html";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+})();
+</script>
+</body>
 </html>
