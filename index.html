@@ -102,9 +102,11 @@
     <div class="container">
       <h2>Interactive Test Generator</h2>
       <p class="small">
-        Paste questions in the box in this exact format.
-        <strong>Do not include inline answers</strong> — enter the global answer
-        key below. Example: <code>1:B, 2:A, 3:C</code>
+        Use the format of the preset questions/answers as an example.<br />
+        <strong>
+          If you are on a HTML download, ignore these two boxes. Simply scroll
+          down to take the test.
+        </strong>
       </p>
 
       <label class="k">Questions (no inline answers)</label>
@@ -115,13 +117,7 @@ B. Silver
 C. Copper
 D. Paper money
 
-2. Where was the largest source of Spanish colonial silver?
-A. Mexico City
-B. Potosí in Bolivia
-C. Lima, Peru
-D. Brazil
-
-3. What labor system did Spain revive from the Incas to supply workers for silver mines?
+2. What labor system did Spain revive from the Incas to supply workers for silver mines?
 A. Encomienda
 B. Serfdom
 C. Mita system
@@ -130,9 +126,7 @@ D. Chattel slavery
       >
 
       <label class="k" style="margin-top: 8px">Answer key (global)</label>
-      <textarea id="answerKey" class="answerKey" rows="2">
-1:B, 2:B, 3:C</textarea
-      >
+      <textarea id="answerKey" class="answerKey" rows="2">1:B, 2:C</textarea>
 
       <div class="controls" style="margin-top: 8px">
         <button class="primary" id="generate">Generate Test</button>
@@ -395,6 +389,9 @@ D. Chattel slavery
         });
 
         download.addEventListener("click", () => {
+          document.getElementById("input").textContent = input.value;
+          document.getElementById("answerKey").textContent = answerKeyEl.value;
+
           const blob = new Blob([document.documentElement.outerHTML], {
             type: "text/html",
           });
@@ -407,6 +404,7 @@ D. Chattel slavery
           a.remove();
           URL.revokeObjectURL(url);
         });
+        if (!window.opener) generate.click();
       })();
     </script>
   </body>
