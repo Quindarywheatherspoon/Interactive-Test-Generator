@@ -96,6 +96,166 @@
         margin-bottom: 6px;
         font-weight: 600;
       }
+
+      /* Normal Mode Styles */
+      .normal-mode-container {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+        min-height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #2b6df6;
+        transition: width 0.3s ease;
+      }
+
+      .question-counter {
+        font-size: 14px;
+        color: #64748b;
+        margin-bottom: 10px;
+      }
+
+      .normal-question {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 30px 0;
+        color: #1e293b;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .answer-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin: 30px 0;
+        flex-grow: 1;
+      }
+
+      .answer-option {
+        padding: 20px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 16px;
+        font-weight: 500;
+        background: white;
+      }
+
+      .answer-option:hover {
+        border-color: #2b6df6;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(43, 109, 246, 0.15);
+      }
+
+      .answer-option.correct {
+        background: #dcfce7;
+        border-color: #16a34a;
+        color: #15803d;
+      }
+
+      .answer-option.incorrect {
+        background: #fef2f2;
+        border-color: #dc2626;
+        color: #dc2626;
+      }
+
+      .answer-option.disabled {
+        pointer-events: none;
+        opacity: 0.7;
+      }
+
+      .immediate-feedback {
+        margin: 20px 0;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .immediate-feedback.correct {
+        background: #dcfce7;
+        color: #15803d;
+      }
+
+      .immediate-feedback.incorrect {
+        background: #fef2f2;
+        color: #dc2626;
+      }
+
+      .next-button-container {
+        text-align: center;
+        margin: 20px 0;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .next-button {
+        background: #2b6df6;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .next-button:hover {
+        background: #1d4ed8;
+      }
+
+      .final-score {
+        text-align: center;
+        padding: 40px;
+      }
+
+      .final-score h2 {
+        font-size: 32px;
+        color: #1e293b;
+        margin-bottom: 10px;
+      }
+
+      .score-details {
+        font-size: 18px;
+        color: #64748b;
+        margin-bottom: 30px;
+      }
+
+      .mode-selector {
+        margin-bottom: 15px;
+      }
+
+      select {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #d8dbe2;
+        font-size: 14px;
+        background: white;
+      }
     </style>
   </head>
   <body>
@@ -128,6 +288,16 @@ D. Chattel slavery
       <label class="k" style="margin-top: 8px">Answer key (global)</label>
       <textarea id="answerKey" class="answerKey" rows="2">1:B, 2:C</textarea>
 
+      <div class="mode-selector">
+        <label class="k">Test Mode:</label>
+        <select id="testMode">
+          <option value="normal" selected>
+            Normal Mode (One question at a time)
+          </option>
+          <option value="cram">Cram Mode (All questions at once)</option>
+        </select>
+      </div>
+
       <div class="controls" style="margin-top: 8px">
         <button class="primary" id="generate">Generate Test</button>
         <button class="ghost" id="clear">Clear</button>
@@ -144,7 +314,7 @@ D. Chattel slavery
 
     <!-- Test Scrambler link -->
     <a
-      href="https://ylgx93.csb.app/"
+      href="https://ylgx93.csb.app/ "
       target="_blank"
       style="
         position: fixed;
@@ -174,6 +344,7 @@ D. Chattel slavery
         const noticeArea = document.getElementById("noticeArea");
         const scoreEl = document.getElementById("score");
         const download = document.getElementById("download");
+        const testMode = document.getElementById("testMode");
 
         function parseText(text) {
           const lines = text.replace(/\r/g, "").split("\n");
@@ -223,7 +394,7 @@ D. Chattel slavery
           });
         }
 
-        function renderTest(questions) {
+        function renderCramMode(questions) {
           testArea.innerHTML = "";
           if (!questions.length) {
             noticeArea.innerHTML =
@@ -374,10 +545,168 @@ D. Chattel slavery
           });
         }
 
+        function renderNormalMode(questions) {
+          testArea.innerHTML = "";
+          if (!questions.length) {
+            noticeArea.innerHTML =
+              '<div class="notice">No questions found. Make sure each question starts with "1." and options with "A." etc. Do not include inline answers.</div>';
+            return;
+          }
+          noticeArea.innerHTML = "";
+
+          const container = document.createElement("div");
+          container.className = "normal-mode-container";
+
+          // Progress bar
+          const progressBar = document.createElement("div");
+          progressBar.className = "progress-bar";
+          const progressFill = document.createElement("div");
+          progressFill.className = "progress-fill";
+          progressBar.appendChild(progressFill);
+          container.appendChild(progressBar);
+
+          // Question counter
+          const questionCounter = document.createElement("div");
+          questionCounter.className = "question-counter";
+          container.appendChild(questionCounter);
+
+          // Question display
+          const questionDisplay = document.createElement("div");
+          questionDisplay.className = "normal-question";
+          container.appendChild(questionDisplay);
+
+          // Answer options
+          const answerOptions = document.createElement("div");
+          answerOptions.className = "answer-options";
+          container.appendChild(answerOptions);
+
+          // Feedback display
+          const feedbackDisplay = document.createElement("div");
+          feedbackDisplay.className = "immediate-feedback";
+          container.appendChild(feedbackDisplay);
+
+          // Next button container
+          const nextButtonContainer = document.createElement("div");
+          nextButtonContainer.className = "next-button-container";
+
+          // Next button
+          const nextButton = document.createElement("button");
+          nextButton.className = "next-button";
+          nextButton.textContent = "Next Question";
+          nextButton.style.display = "none";
+          nextButtonContainer.appendChild(nextButton);
+          container.appendChild(nextButtonContainer);
+
+          testArea.appendChild(container);
+
+          let currentQuestionIndex = 0;
+          let correctAnswers = 0;
+          let answeredQuestions = 0;
+
+          function displayQuestion(index) {
+            const q = questions[index];
+            questionCounter.textContent = `Question ${index + 1} of ${
+              questions.length
+            }`;
+            questionDisplay.textContent = q.text;
+            progressFill.style.width = `${
+              ((index + 1) / questions.length) * 100
+            }%`;
+
+            answerOptions.innerHTML = "";
+            feedbackDisplay.innerHTML = "";
+            feedbackDisplay.className = "immediate-feedback";
+            nextButton.style.display = "none";
+
+            ["A", "B", "C", "D"].forEach((letter) => {
+              if (q.options[letter]) {
+                const option = document.createElement("button");
+                option.className = "answer-option";
+                option.textContent = `${letter}. ${q.options[letter]}`;
+                option.dataset.answer = letter;
+
+                option.addEventListener("click", () => {
+                  answeredQuestions++;
+
+                  // Disable all options
+                  answerOptions
+                    .querySelectorAll(".answer-option")
+                    .forEach((opt) => {
+                      opt.classList.add("disabled");
+                    });
+
+                  if (q.answer && letter === q.answer) {
+                    // Correct answer
+                    option.classList.add("correct");
+                    feedbackDisplay.textContent = "✓ Correct!";
+                    feedbackDisplay.classList.add("correct");
+                    correctAnswers++;
+                  } else {
+                    // Incorrect answer
+                    option.classList.add("incorrect");
+                    feedbackDisplay.textContent = `✗ Incorrect! The correct answer is ${q.answer}.`;
+                    feedbackDisplay.classList.add("incorrect");
+
+                    // Show correct answer
+                    if (q.answer) {
+                      const correctOption = answerOptions.querySelector(
+                        `[data-answer="${q.answer}"]`
+                      );
+                      if (correctOption) correctOption.classList.add("correct");
+                    }
+                  }
+
+                  nextButton.style.display = "inline-block";
+
+                  // Scroll to make sure next button is visible
+                  nextButtonContainer.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                  });
+                });
+
+                answerOptions.appendChild(option);
+              }
+            });
+          }
+
+          nextButton.addEventListener("click", () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+              displayQuestion(currentQuestionIndex);
+            } else {
+              // Show final score
+              container.innerHTML = `
+                <div class="final-score">
+                  <h2>Test Complete!</h2>
+                  <div class="score-details">
+                    You answered ${correctAnswers} out of ${
+                questions.length
+              } questions correctly.
+                  </div>
+                  <div style="font-size: 48px; margin: 20px 0;">
+                    ${Math.round((correctAnswers / questions.length) * 100)}%
+                  </div>
+                  <button class="primary" onclick="location.reload()">Take Test Again</button>
+                </div>
+              `;
+              scoreEl.textContent = `Final Score: ${correctAnswers} / ${questions.length}`;
+            }
+          });
+
+          // Display first question
+          displayQuestion(0);
+        }
+
         generate.addEventListener("click", () => {
           const questions = parseText(input.value);
           applyGlobalAnswers(questions, answerKeyEl.value);
-          renderTest(questions);
+
+          if (testMode.value === "normal") {
+            renderNormalMode(questions);
+          } else {
+            renderCramMode(questions);
+          }
         });
 
         clear.addEventListener("click", () => {
